@@ -1,0 +1,61 @@
+Q1
+
+SELECT sh_name NAME, sh_address ADDRESS, sh_phone PHONE
+FROM shelter JOIN assignment USING(shid)
+GROUP BY sh_name, sh_address, sh_phone
+HAVING COUNT(vid)=
+      	ANY(SELECT COUNT(vid)
+     	FROM assignment JOIN shelter
+      	USING(shid)
+    	having COUNT(vid) > 4
+      	GROUP BY sh_name, sh_address, sh_phone);
+
+Q2
+
+SELECT sh_name, COUNT(*) NUMBER_OF_VOLUNTEER
+FROM shelter JOIN assignment USING(shid)
+GROUP BY sh_name
+  	HAVING COUNT(vid)=
+  	(SELECT MAX(COUNT(vid))
+    	FROM assignment JOIN shelter
+    	USING(shid)
+    	GROUP BY sh_name);
+
+Q3
+
+SELECT s_name, count(sid) NUMBER_OF_SHELTER
+FROM staff JOIN shelter USING(sid)
+HAVING COUNT(sid) > 1
+group by s_name;
+
+Q4
+
+
+SELECT V_NAME,VID,START_DATE, FINISH_DATE,ROUND(MONTHS_BETWEEN(FINISH_DATE,START_DATE),2) TOTAL_MONTHS
+        FROM ASSIGNMENT JOIN VOLUNTEER USING (VID)
+        WHERE ROUND(MONTHS_BETWEEN(FINISH_DATE,START_DATE),2) > 3;
+
+Q5
+
+SELECT v_name
+FROM volunteer JOIN assignment USING(vid)
+GROUP BY v_name
+HAVING COUNT(shid) IS NULL;
+
+
+SOALAN MADAM
+SQL> SELECT vid,v_name
+  2  FROM volunteer JOIN assignment USING(vid)
+  3  WHERE shid = (SELECT shid
+  4  FROM volunteer JOIN assignment USING(vid)
+  5  WHERE v_name='Nik Aqilah');
+
+       VID V_NAME
+---------- -------------------------
+       102 Nabil Ahmad
+       113 Nik Aqilah
+       114 Amar Ahyan
+
+
+	
+   		
